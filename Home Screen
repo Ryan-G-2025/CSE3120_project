@@ -1,0 +1,10 @@
+display home screen
+show play button
+show players highscore
+
+if player clicks play button
+  load map generation and code
+
+if player clicks exit button
+  close game
+
