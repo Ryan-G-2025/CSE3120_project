@@ -1,0 +1,14 @@
+This file is for the movement of the controllable charecter. 
+This will contain the positional data, storing the x and y cords
+This will also create and display the controllable character.
+
+The flappy bird dysplay:
+movement in x:
+  will be a constant speed moving to the right
+movement in y:
+  if the player presses space, it will make the flappy bird jump up some pixles before gravity takes over
+  will always have a gravity make the flappy bird fall to the ground exept when the jump key is pressed
+
+if time: make a little animation for the jumping
+if the bird is jumping, rotate the model so it tilts up
+if the bird is falling, rotate the model down
