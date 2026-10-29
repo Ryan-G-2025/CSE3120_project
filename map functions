@@ -1,0 +1,15 @@
+total map size - 288x512
+
+when generating towers
+add 1 tower from top every x pixels on x axis
+    set min y axis value to 173 px
+add 1 tower from bottom every x pixels on y axis
+    set max y axis value to 115 px
+gap of x pixels between each tower on x axis
+
+if player passes towers, add 1 to "curr score" and add new tower to right side of screen
+also shift screen to left 266 px on x axis per passed tower
+if players "highscore" < curr score, set curr score to highscore
+
+if time/possible--
+add random gap distance on y value inbetween top and bottom pillar
