@@ -12,3 +12,28 @@ movement in y:
 if time: make a little animation for the jumping
 if the bird is jumping, rotate the model so it tilts up
 if the bird is falling, rotate the model down
+
+INCLUDE Irvine32.inc
+
+GROUND_ROW = 20
+BIRD_CHAR = '>'
+
+.data
+
+birdX   BYTE 10
+birdY   BYTE 10
+birdVel SBYTE 0
+
+.code
+main PROC
+
+call Clrscr
+mov  dl, birdX
+mov  dh, birdY
+call Gotoxy
+mov  al, BIRD_CHAR
+call WriteChar
+
+exit
+main ENDP
+END main
