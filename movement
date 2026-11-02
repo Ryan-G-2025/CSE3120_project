@@ -19,21 +19,25 @@ GROUND_ROW = 20
 BIRD_CHAR = '>'
 
 .data
-
 birdX   BYTE 10
 birdY   BYTE 10
 birdVel SBYTE 0
 
 .code
 main PROC
-
 call Clrscr
+call DrawBird
+exit
+main ENDP
+
+DrawBird PROC USES eax edx
 mov  dl, birdX
 mov  dh, birdY
+
 call Gotoxy
 mov  al, BIRD_CHAR
 call WriteChar
+ret
+DrawBird ENDP
 
-exit
-main ENDP
 END main
