@@ -17,6 +17,7 @@ INCLUDE Irvine32.inc
 
 GROUND_ROW = 20
 BIRD_CHAR = '>'
+FRAME_DELAY = 100
 
 .data
 birdX   BYTE 10
@@ -26,18 +27,34 @@ birdVel SBYTE 0
 .code
 main PROC
 call Clrscr
+
+GameLoop :
+call EraseBird
 call DrawBird
+mov  eax, FRAME_DELAY
+call Delay
+jmp  GameLoop
 exit
 main ENDP
 
 DrawBird PROC USES eax edx
 mov  dl, birdX
 mov  dh, birdY
-
 call Gotoxy
+
 mov  al, BIRD_CHAR
 call WriteChar
 ret
 DrawBird ENDP
+
+EraseBird PROC USES eax edx
+mov  dl, birdX
+mov  dh, birdY
+call Gotoxy
+mov  al, ' '
+call WriteChar
+ret
+
+EraseBird ENDP
 
 END main
