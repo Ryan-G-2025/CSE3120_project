@@ -15,6 +15,29 @@ TowerX DWORD 180, 310, 440
 TopGap DWORD 173, 173, 173
 BottomGap DWORD 397, 397, 397
 
+;Game state stuff
+pass DWORD 0, 0, 0
+CurrScore DWORD 0
+HighScore DWORD 0 
+GameActive DWORD 1
+
+;rendering variables
+CellRow DWORD 0
+CellCol DWORD 0
+CellPXX DWORD 0
+CellPXY DWORD 0
+PlayerRow DWORD 0
+TowerInd DWORD 0
+rowBuffer BYTE 37 DUP(0)
+
+;mechanics stuff
+GameOverTxt BYTE "GAME OVER", 0
+ScoreTxt BYTE "Score: ", 0
+HighScoreTxt BYTE "High Score: ", 0
+
+
+
+
 
 
 
