@@ -1,3 +1,23 @@
+INCLUDE Irvine32.inc
+
+;Map functions and dimensions  being declared
+MAP_WIDTH = 288
+MAP_HEIGHT = 512
+
+Birdx 48
+BirdY 256
+BirdSize 10
+Fall DWORD 8
+Jump DWORD 15
+TowerWidth DWORD 24
+TowerMove DWORD 4
+TowerX DWORD 180, 310, 440
+TopGap DWORD 173, 173, 173
+BottomGap DWORD 397, 397, 397
+
+
+
+
 total map size - 288x512 px
 load character model
     10x10 px
