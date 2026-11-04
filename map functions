@@ -1,19 +1,17 @@
 INCLUDE Irvine32.inc
 
 ;Map functions and dimensions  being declared
-MAP_WIDTH = 288
-MAP_HEIGHT = 512
+MAP_WIDTH = 36
+MAP_HEIGHT = 20
+GROUND_ROW = 20
 
-Birdx 48
-BirdY 256
-BirdSize 10
-Fall DWORD 8
-Jump DWORD 15
-TowerWidth DWORD 24
-TowerMove DWORD 4
-TowerX DWORD 180, 310, 440
-TopGap DWORD 173, 173, 173
-BottomGap DWORD 397, 397, 397
+.data 
+
+TowerWidth DWORD 3
+TowerMove DWORD 1
+TowerX DWORD 35, 50, 65
+TopGap DWORD 6, 8, 5
+BottomGap DWORD 13, 15, 12
 
 ;Game state stuff
 pass DWORD 0, 0, 0
@@ -24,49 +22,10 @@ GameActive DWORD 1
 ;rendering variables
 CellRow DWORD 0
 CellCol DWORD 0
-CellPXX DWORD 0
-CellPXY DWORD 0
-PlayerRow DWORD 0
 TowerInd DWORD 0
-rowBuffer BYTE 37 DUP(0)
 
 ;mechanics stuff
 GameOverTxt BYTE "GAME OVER", 0
 ScoreTxt BYTE "Score: ", 0
 HighScoreTxt BYTE "High Score: ", 0
-
-
-
-
-
-
-
-total map size - 288x512 px
-load character model
-    10x10 px
-
-when generating towers
-add 1 tower from top every x pixels on x axis
-    set min y axis value to 173 px
-add 1 tower from bottom every x pixels on y axis
-    set max y axis value to 115 px
-gap of x pixels between each tower on x axis
-
-if player hits jump button
-    increase y val by 15 px
-every frame drop player y val by 8 px
-
-if player passes towers
-    add 1 to "curr score" and add new tower to right side of screen
-also shift screen to left 266 px on x axis per passed tower
-if players "highscore" < curr score
-    set curr score to highscore
-
-if player hits tower
-    stop movement
-    end map generation
-    display "Game Over"
-
-
-if time/possible--
-add random gap distance on y value inbetween top and bottom pillar
+.code
