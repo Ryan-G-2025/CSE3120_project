@@ -49,7 +49,7 @@ MoveTower PROC
 
 MoveTLoop: 
   cmp TowerInd, 3
-  jge MoveDone
+  jge MoveTDone
   mov ebx, TowerInd
 
   mov eax, TowerMove
