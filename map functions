@@ -47,6 +47,7 @@ MapInitialize PROC
   ret
 MapInitialize ENDP
 
+
 ;Create the map, towers, ceiling, ground
 CreateMap PROC
   mov CellRow, 0
@@ -56,7 +57,7 @@ CreateRow:
   jge CreateMapDone
   mov CellCol, 0
 
-DreateCol:
+CreateCol:
   cmp CellCol, MAP_WIDTH
   jge RowNext
   mov al, ' '
@@ -102,7 +103,20 @@ TowerNext:
   jmp CheckTowerLoop
 
 Print:
+  mov dl, BYTE PTR CellCol
+  mov dh, BYTE PTR CellRow
+  call Gotoxy
+  call WriteChar 
+  inc CellCol
+  jmp CreateCol
 
+RowNext:
+  inc CellRow
+  jmp CreateRow
+
+CreateMapDone:
+  ret
+CreateMap  ENDP
 
 
 ;Move the tower down the map as player continues
@@ -120,6 +134,7 @@ MoveTLoop:
   ret
 
 MoveTower ENDP
+
 
 ;Generate the Towers
 CreateTower PROC
