@@ -68,13 +68,40 @@ DreateCol:
   mov al, '='
   jmp Print
 
+CheckTower:
+  mov TowerInd, 0
 
+CheckTowerLoop:
+  cmp TowerInd, 3
+  jge Print
+  mov ebx, TowerInd
 
+;col stuff
+  mov eax, CellCol
+  cmp eax, TowerX[ebx*4]
+  jl TowerNext
+  mov ecx, TowerX[ebx*4]
+  add ecx, TowerWidth
+  cmp eax, ecx
+  jge TowerNext
 
+;row stuff
+  mov eax, CellRow
+  cmp eax, TopGap[ebx*4]
+  jl CreateTower
+  cmp eax, BottomGap[ebx*4]
+  jge CreateTower
+  jmp Print
 
+CreateTower:
+  mov al, '#'
+  jmp Print
 
+TowerNext:
+  inc TowerInd
+  jmp CheckTowerLoop
 
-
+Print:
 
 
 
