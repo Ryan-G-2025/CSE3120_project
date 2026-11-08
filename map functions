@@ -29,6 +29,7 @@ TowerInd DWORD 0
 GameOverTxt BYTE "GAME OVER", 0
 ScoreTxt BYTE "Score: ", 0
 HighScoreTxt BYTE "High Score: ", 0
+MapChar BYTE ' '
 
 
 .code
@@ -60,13 +61,12 @@ CreateRow:
 CreateCol:
   cmp CellCol, MAP_WIDTH
   jge RowNext
-  mov al, ' '
+  mov MapChar, ' '
 
   mov eax, CellRow
   cmp eax, GROUND_ROW
   jne CheckTower
-
-  mov al, '='
+  mov MapChar, '='
   jmp Print
 
 CheckTower:
@@ -77,7 +77,7 @@ CheckTowerLoop:
   jge Print
   mov ebx, TowerInd
 
-;col stuff
+;Check Col
   mov eax, CellCol
   cmp eax, TowerX[ebx*4]
   jl TowerNext
@@ -86,7 +86,7 @@ CheckTowerLoop:
   cmp eax, ecx
   jge TowerNext
 
-;row stuff
+;Check Row
   mov eax, CellRow
   cmp eax, TopGap[ebx*4]
   jl CreateTower
@@ -95,7 +95,7 @@ CheckTowerLoop:
   jmp Print
 
 CreateTower:
-  mov al, '#'
+  mov MapChar, '#'
   jmp Print
 
 TowerNext:
@@ -106,6 +106,7 @@ Print:
   mov dl, BYTE PTR CellCol
   mov dh, BYTE PTR CellRow
   call Gotoxy
+  mov al, MapChar
   call WriteChar 
   inc CellCol
   jmp CreateCol
@@ -125,14 +126,16 @@ MoveTower PROC
 
 MoveTLoop: 
   cmp TowerInd, 3
+  jge MoveDone
   mov ebx, TowerInd
 
   mov eax, TowerMove
   sub TowerX[ebx*4], eax
   inc TowerInd
+  jmp MoveTLoop
 
+MoveDone:
   ret
-
 MoveTower ENDP
 
 
@@ -163,6 +166,7 @@ PlaceTower:
 
   ;make gap in towers dif
   mov eax, 6
+  call RandomRange
   add eax, 4
   mov TopGap[ebx*4], eax
 
