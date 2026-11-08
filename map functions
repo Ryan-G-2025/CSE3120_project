@@ -39,6 +39,10 @@ MapInitialize PROC
   mov TowerX[8], 65
   mov CurrScore, 0
   mov HighScore, 0
+  mov PassTower, 0
+  mov PassTower[4], 0
+  mov PassTower[8], 0
+  mov GameActive, 1
 
   ret
 MapInitialize ENDP
@@ -61,29 +65,45 @@ MoveTower ENDP
 
 ;Generate the Towers
 CreateTower PROC
-  mov TowerInd, 3
+  mov TowerInd, 0
 
 CreateLoop:
   cmp TowerInd, 3
+  jge CreateDone
   mov ebx, TowerInd
   cmp TowerX[ebx*4], -3
+  jg CreateNext
 
   mov eax, TowerX[0]
   cmp eax, TowerX[4]
+  jge CheckThird
   mov eax, TowerX[4]
+
+CheckThird:
+  cmp eax, TowerX[8]
+  jge PlaceTower
+  mov eax, TowerX[8]
 
 PlaceTower:
   add eax, 15
   mov TowerX[ebx*4], eax
 
-  ;make gap in tower dif
+  ;make gap in towers dif
   mov eax, 6
   add eax, 4
   mov TopGap[ebx*4], eax
 
+  add eax, 7
+  mov BottomGap[ebx*4], eax
+  mov PassTower[ebx*4], 0
 
+CreateNext:
+  inc TowerInd
+  jmp CreateLoop
 
-
+CreateDone: 
+  ret
+CreateTower ENDP
 
 
 
