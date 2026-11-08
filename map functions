@@ -182,6 +182,46 @@ CreateDone:
   ret
 CreateTower ENDP
 
+;check if bird htis something and loses
+CheckCollision PROC
+  ;check ground
+  movzx eax, birdY
+  cmp eax, GROUND_ROW
+  jge CollisionDetected
+
+  ;check ceiling
+  cmp BirdY, 0
+  jbe CollisionDetected
+  mov TowerInd, 0
+
+CheckCollisionLoop: 
+;stuff
+
+
+
+
+NextCollisionTower:
+  inc TowerInd
+  jmp CheckCollisionLoop
+
+CollisionDetected: 
+  mov GameActive, 0
+  jmp CollisionDone
+
+NoCollision:
+  mov GameActive, 1
+
+CollisionDone:
+  ret
+CheckCollision ENDP
+
+
+
+
+
+
+
+
 
 
 
