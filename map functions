@@ -49,18 +49,40 @@ MoveTower PROC
 
 MoveTLoop: 
   cmp TowerInd, 3
-  jge MoveTDone
   mov ebx, TowerInd
 
   mov eax, TowerMove
   sub TowerX[ebx*4], eax
   inc TowerInd
-  jmp MoveTLoop
 
-MoveTDone:
   ret
 
 MoveTower ENDP
+
+;Generate the Towers
+CreateTower PROC
+  mov TowerInd, 3
+
+CreateLoop:
+  cmp TowerInd, 3
+  mov ebx, TowerInd
+  cmp TowerX[ebx*4], -3
+
+  mov eax, TowerX[0]
+  cmp eax, TowerX[4]
+  mov eax, TowerX[4]
+
+PlaceTower:
+  add eax, 15
+  mov TowerX[ebx*4], eax
+
+  ;make gap in tower dif
+  mov eax, 6
+  add eax, 4
+  mov TopGap[ebx*4], eax
+
+
+
 
 
 
