@@ -195,10 +195,26 @@ CheckCollision PROC
   mov TowerInd, 0
 
 CheckCollisionLoop: 
-;stuff
+  cmp TowerInd, 3
+  jge NoCollision
+  mov ebx, TowerInd
 
+  ;check if bird is on tower X
+  movzx eax, BirdX
+  cmp eax, TowerX[ebx*4]
+  jl NextCollisionTower
+  mov eax, TowerX[ebx*4]
+  add eax, TowerWidth
+  movzx ecx, BirdX
+  cmp ecx, eax
+  jge NextCollisionTower
 
-
+  ;check if bird is on tower Y/outside gap
+  movzx eax, BirdY
+  cmp eax, TopGap[ebx*4]
+  jl CollisionDetected
+  cmp eax, BottomGap[ebx*4]
+  jge CollisionDetected
 
 NextCollisionTower:
   inc TowerInd
