@@ -19,6 +19,8 @@ GROUND_ROW = 20
 BIRD_CHAR = '>'
 FRAME_DELAY = 100
 GRAVITY_RATE = 2
+JUMP_HEIGHT = 3
+SPACE_KEY = ' '
 
 .data
 birdX      BYTE 10
@@ -31,6 +33,7 @@ main PROC
 call Clrscr
 GameLoop :
 call EraseBird
+call CheckInput
 call UpdateBird
 call DrawBird
 mov  eax, FRAME_DELAY
@@ -39,16 +42,35 @@ jmp  GameLoop
 exit
 main ENDP
 
-UpdateBird PROC
-inc  frameCount
-cmp  frameCount, GRAVITY_RATE
-jb   UpdateDone
-mov  frameCount, 0
-cmp  birdY, GROUND_ROW
-jae  UpdateDone
-inc  birdY
-UpdateDone :
+; NOT LEARNED IN CLASS : learned from Irvine book regaurding read key
+CheckInput PROC USES eax ebx edx
+call ReadKey
+jz   InputDone
+cmp  al, SPACE_KEY
+jne  InputDone
+cmp  birdY, JUMP_HEIGHT
+jb   HitCeiling
+sub  birdY, JUMP_HEIGHT
+jmp  InputDone
+
+HitCeiling :
+mov  birdY, 0
+
+InputDone :
+    ret
+    CheckInput ENDP
+
+    UpdateBird PROC
+    inc  frameCount
+    cmp  frameCount, GRAVITY_RATE
+    jb   UpdateDone
+    mov  frameCount, 0
+    cmp  birdY, GROUND_ROW
+    jae  UpdateDone
+    inc  birdY
+    UpdateDone :
 ret
+
 UpdateBird ENDP
 
 DrawBird PROC USES eax edx
@@ -58,6 +80,7 @@ call Gotoxy
 mov  al, BIRD_CHAR
 call WriteChar
 ret
+
 DrawBird ENDP
 
 EraseBird PROC USES eax edx
