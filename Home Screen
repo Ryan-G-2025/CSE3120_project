@@ -3,9 +3,36 @@ INCLUDE flappy.inc
 .code
 main PROC
 call Randomize
+call ShowHomeScreen
+MenuInput :
+call ReadChar
+cmp  al, ' '
+je   StartGame
+cmp  al, 'q'
+je   QuitProgram
+cmp  al, 'Q'
+je   QuitProgram
+jmp  MenuInput
+StartGame :
 call RunGame
+QuitProgram :
 call Clrscr
 exit
 main ENDP
+
+ShowHomeScreen PROC USES eax
+call Clrscr
+mGotoxy 12, 5
+mWrite "FLAPPY BIRD"
+mGotoxy 12, 8
+mWrite "[Space] Play"
+mGotoxy 12, 9
+mWrite "[Q] Quit"
+mGotoxy 12, 11
+mWrite "High Score: "
+mov  eax, HighScore
+call WriteDec
+ret
+ShowHomeScreen ENDP
 
 END main
