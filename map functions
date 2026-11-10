@@ -34,7 +34,7 @@ mov TowerX, 35
 mov TowerX[4], 50
 mov TowerX[8], 65
 mov CurrScore, 0
-mov HighScore, 0
+;mov HighScore, 0
 mov PassTower, 0
 mov PassTower[4], 0
 mov PassTower[8], 0
