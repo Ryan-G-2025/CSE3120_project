@@ -3,6 +3,7 @@ INCLUDE flappy.inc
 .code
 main PROC
 call Randomize
+MenuLoop :
 call ShowHomeScreen
 MenuInput :
 call ReadChar
@@ -15,6 +16,8 @@ je   QuitProgram
 jmp  MenuInput
 StartGame :
 call RunGame
+call EndRound
+jmp  MenuLoop
 QuitProgram :
 call Clrscr
 exit
@@ -64,5 +67,31 @@ mov  eax, CurrScore
 call WriteDec
 ret
 ShowScore ENDP
+
+EndRound PROC USES eax
+mov  eax, CurrScore
+cmp  eax, HighScore
+jbe  ShowResults
+mov  HighScore, eax
+ShowResults :
+call Clrscr
+mGotoxy 12, 7
+mWrite "GAME OVER"
+mGotoxy 12, 9
+mWrite "Score: "
+mov  eax, CurrScore
+call WriteDec
+mGotoxy 12, 10
+mWrite "High Score: "
+mov  eax, HighScore
+call WriteDec
+mGotoxy 6, 13
+mWrite "Press Enter to continue"
+WaitEnter:
+call ReadChar
+cmp  al, 0Dh
+jne  WaitEnter
+ret
+EndRound ENDP
 
 END main
