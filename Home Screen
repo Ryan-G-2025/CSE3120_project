@@ -1,10 +1,11 @@
-display home screen
-show play button
-show players highscore
+INCLUDE flappy.inc
 
-if player clicks play button
-  load map generation and code
+.code
+main PROC
+call Randomize
+call RunGame
+call Clrscr
+exit
+main ENDP
 
-if player clicks exit button
-  close game
-
+END main
