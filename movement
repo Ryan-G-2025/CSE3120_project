@@ -45,8 +45,10 @@ call CreateTower
 call CheckCollision
 cmp  GameActive, 0
 je   EndGame
+call UpdateScore
 call CreateMap
 call DrawBird
+call ShowScore
 mov  eax, FRAME_DELAY
 call Delay
 jmp  GameLoop
