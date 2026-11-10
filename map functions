@@ -1,13 +1,6 @@
-INCLUDE Irvine32.inc
+INCLUDE flappy.inc
 
-;Map functions and dimensions  being declared
-MAP_WIDTH = 36
-MAP_HEIGHT = 20
-GROUND_ROW = 19
-
-.data 
-
-EXTERN birdX:BYTE, birdY:BYTE
+.data
 
 TowerWidth DWORD 3
 TowerMove DWORD 1
@@ -19,7 +12,7 @@ NewTowerX DWORD 0
 ;Game state stuff
 PassTower DWORD 0, 0, 0
 CurrScore DWORD 0
-HighScore DWORD 0 
+HighScore DWORD 0
 GameActive DWORD 1
 
 ;rendering variables
@@ -37,210 +30,200 @@ MapChar BYTE ' '
 .code
 ;Intialize map parts and score
 MapInitialize PROC
-  mov TowerX, 35
-  mov TowerX[4], 50
-  mov TowerX[8], 65
-  mov CurrScore, 0
-  mov HighScore, 0
-  mov PassTower, 0
-  mov PassTower[4], 0
-  mov PassTower[8], 0
-  mov GameActive, 1
+mov TowerX, 35
+mov TowerX[4], 50
+mov TowerX[8], 65
+mov CurrScore, 0
+mov HighScore, 0
+mov PassTower, 0
+mov PassTower[4], 0
+mov PassTower[8], 0
+mov GameActive, 1
 
-  ret
+ret
 MapInitialize ENDP
 
 
 ;Create the map, towers, ceiling, ground
 CreateMap PROC
-  mov CellRow, 0
+mov CellRow, 0
 
 CreateRow:
-  cmp CellRow, MAP_HEIGHT
-  jge CreateMapDone
-  mov CellCol, 0
+cmp CellRow, MAP_HEIGHT
+jge CreateMapDone
+mov CellCol, 0
 
-CreateCol:
-  cmp CellCol, MAP_WIDTH
-  jge RowNext
-  mov MapChar, ' '
+CreateCol :
+	cmp CellCol, MAP_WIDTH
+	jge RowNext
+	mov MapChar, ' '
 
-  mov eax, CellRow
-  cmp eax, GROUND_ROW
-  jne CheckTower
-  mov MapChar, '='
-  jmp Print
+	mov eax, CellRow
+	cmp eax, GROUND_ROW
+	jne CheckTower
+	mov MapChar, '='
+	jmp Print
 
-CheckTower:
-  mov TowerInd, 0
+	CheckTower :
+mov TowerInd, 0
 
-CheckTowerLoop:
-  cmp TowerInd, 3
-  jge Print
-  mov ebx, TowerInd
+CheckTowerLoop :
+	cmp TowerInd, 3
+	jge Print
+	mov ebx, TowerInd
 
-;Check Col
-  mov eax, CellCol
-  cmp eax, TowerX[ebx*4]
-  jl TowerNext
-  mov ecx, TowerX[ebx*4]
-  add ecx, TowerWidth
-  cmp eax, ecx
-  jge TowerNext
+	;Check Col
+	mov eax, CellCol
+	cmp eax, TowerX[ebx * 4]
+	jl TowerNext
+	mov ecx, TowerX[ebx * 4]
+	add ecx, TowerWidth
+	cmp eax, ecx
+	jge TowerNext
 
-;Check Row
-  mov eax, CellRow
-  cmp eax, TopGap[ebx*4]
-  jl CreateTower
-  cmp eax, BottomGap[ebx*4]
-  jge CreateTower
-  jmp Print
+	;Check Row
+	mov eax, CellRow
+	cmp eax, TopGap[ebx * 4]
+	jl DrawTowerCell
+	cmp eax, BottomGap[ebx * 4]
+	jge DrawTowerCell
+	jmp Print
 
-CreateTower:
-  mov MapChar, '#'
-  jmp Print
+	DrawTowerCell :
+mov MapChar, '#'
+jmp Print
 
-TowerNext:
-  inc TowerInd
-  jmp CheckTowerLoop
+TowerNext :
+inc TowerInd
+jmp CheckTowerLoop
 
-Print:
-  mov dl, BYTE PTR CellCol
-  mov dh, BYTE PTR CellRow
-  call Gotoxy
-  mov al, MapChar
-  call WriteChar 
-  inc CellCol
-  jmp CreateCol
+Print :
+mov dl, BYTE PTR CellCol
+mov dh, BYTE PTR CellRow
+call Gotoxy
+mov al, MapChar
+call WriteChar
+inc CellCol
+jmp CreateCol
 
-RowNext:
-  inc CellRow
-  jmp CreateRow
+RowNext :
+inc CellRow
+jmp CreateRow
 
-CreateMapDone:
-  ret
+CreateMapDone :
+ret
 CreateMap  ENDP
 
 
 ;Move the tower down the map as player continues
 MoveTower PROC
-  mov TowerInd, 0
+mov TowerInd, 0
 
-MoveTLoop: 
-  cmp TowerInd, 3
-  jge MoveDone
-  mov ebx, TowerInd
+MoveTLoop:
+cmp TowerInd, 3
+jge MoveDone
+mov ebx, TowerInd
 
-  mov eax, TowerMove
-  sub TowerX[ebx*4], eax
-  inc TowerInd
-  jmp MoveTLoop
+mov eax, TowerMove
+sub TowerX[ebx * 4], eax
+inc TowerInd
+jmp MoveTLoop
 
-MoveDone:
-  ret
+MoveDone :
+ret
 MoveTower ENDP
 
 
 ;Generate the Towers
 CreateTower PROC
-  mov TowerInd, 0
+mov TowerInd, 0
 
 CreateLoop:
-  cmp TowerInd, 3
-  jge CreateDone
-  mov ebx, TowerInd
-  cmp TowerX[ebx*4], -3
-  jg CreateNext
+cmp TowerInd, 3
+jge CreateDone
+mov ebx, TowerInd
+cmp TowerX[ebx * 4], -3
+jg CreateNext
 
-  mov eax, TowerX[0]
-  cmp eax, TowerX[4]
-  jge CheckThird
-  mov eax, TowerX[4]
+mov eax, TowerX[0]
+cmp eax, TowerX[4]
+jge CheckThird
+mov eax, TowerX[4]
 
 CheckThird:
-  cmp eax, TowerX[8]
-  jge PlaceTower
-  mov eax, TowerX[8]
+cmp eax, TowerX[8]
+jge PlaceTower
+mov eax, TowerX[8]
 
-PlaceTower:
-  add eax, 15
-  mov TowerX[ebx*4], eax
+PlaceTower :
+	add eax, 15
+	mov TowerX[ebx * 4], eax
 
-  ;make gap in towers dif
-  mov eax, 6
-  call RandomRange
-  add eax, 4
-  mov TopGap[ebx*4], eax
+	;make gap in towers dif
+	mov eax, 6
+	call RandomRange
+	add eax, 4
+	mov TopGap[ebx * 4], eax
 
-  add eax, 7
-  mov BottomGap[ebx*4], eax
-  mov PassTower[ebx*4], 0
+	add eax, 7
+	mov BottomGap[ebx * 4], eax
+	mov PassTower[ebx * 4], 0
 
-CreateNext:
-  inc TowerInd
-  jmp CreateLoop
+	CreateNext:
+inc TowerInd
+jmp CreateLoop
 
-CreateDone: 
-  ret
+CreateDone :
+ret
 CreateTower ENDP
 
 ;check if bird htis something and loses
 CheckCollision PROC
-  ;check ground
-  movzx eax, birdY
-  cmp eax, GROUND_ROW
-  jge CollisionDetected
+;check ground
+movzx eax, birdY
+cmp eax, GROUND_ROW
+jge CollisionDetected
 
-  ;check ceiling
-  cmp birdY, 0
-  jbe CollisionDetected
-  mov TowerInd, 0
+;check ceiling
+cmp birdY, 0
+jbe CollisionDetected
+mov TowerInd, 0
 
-CheckCollisionLoop: 
-  cmp TowerInd, 3
-  jge NoCollision
-  mov ebx, TowerInd
+CheckCollisionLoop:
+cmp TowerInd, 3
+jge NoCollision
+mov ebx, TowerInd
 
-  ;check if bird is on tower X
-  movzx eax, birdX
-  cmp eax, TowerX[ebx*4]
-  jl NextCollisionTower
-  mov eax, TowerX[ebx*4]
-  add eax, TowerWidth
-  movzx ecx, BirdX
-  cmp ecx, eax
-  jge NextCollisionTower
+;check if bird is on tower X
+movzx eax, birdX
+cmp eax, TowerX[ebx * 4]
+jl NextCollisionTower
+mov eax, TowerX[ebx * 4]
+add eax, TowerWidth
+movzx ecx, BirdX
+cmp ecx, eax
+jge NextCollisionTower
 
-  ;check if bird is on tower Y/outside gap
-  movzx eax, birdY
-  cmp eax, TopGap[ebx*4]
-  jl CollisionDetected
-  cmp eax, BottomGap[ebx*4]
-  jge CollisionDetected
+;check if bird is on tower Y / outside gap
+movzx eax, birdY
+cmp eax, TopGap[ebx * 4]
+jl CollisionDetected
+cmp eax, BottomGap[ebx * 4]
+jge CollisionDetected
 
-NextCollisionTower:
-  inc TowerInd
-  jmp CheckCollisionLoop
+NextCollisionTower :
+inc TowerInd
+jmp CheckCollisionLoop
 
-CollisionDetected: 
-  mov GameActive, 0
-  jmp CollisionDone
+CollisionDetected :
+mov GameActive, 0
+jmp CollisionDone
 
-NoCollision:
-  mov GameActive, 1
+NoCollision :
+mov GameActive, 1
 
-CollisionDone:
-  ret
-CheckCollision ENDP
+CollisionDone :
+	ret
+	CheckCollision ENDP
 
-
-
-
-
-
-
-
-
-
-
-
+END
