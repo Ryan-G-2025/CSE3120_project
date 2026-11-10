@@ -13,9 +13,8 @@ if time: make a little animation for the jumping
 if the bird is jumping, rotate the model so it tilts up
 if the bird is falling, rotate the model down
 
-INCLUDE Irvine32.inc
+INCLUDE flappy.inc
 
-GROUND_ROW = 20
 BIRD_CHAR = '>'
 FRAME_DELAY = 100
 GRAVITY_RATE = 1
@@ -31,22 +30,29 @@ frameCount BYTE 0
 quitGame   BYTE 0
 
 .code
-main PROC
+RunGame PROC
+call MapInitialize
+mov  birdY, 10
+mov  quitGame, 0
 call Clrscr
 GameLoop :
-call EraseBird
 call CheckInput
 cmp  quitGame, 1
 je   EndGame
 call UpdateBird
+call MoveTower
+call CreateTower
+call CheckCollision
+cmp  GameActive, 0
+je   EndGame
+call CreateMap
 call DrawBird
 mov  eax, FRAME_DELAY
 call Delay
 jmp  GameLoop
 EndGame :
-call Clrscr
-exit
-main ENDP
+ret
+RunGame ENDP
 
 ; NOT LEARNED IN CLASS : learned from Irvine book regaurding read key
 CheckInput PROC USES eax ebx edx
@@ -63,10 +69,8 @@ cmp  birdY, JUMP_HEIGHT
 jb   HitCeiling
 sub  birdY, JUMP_HEIGHT
 jmp  InputDone
-
 HitCeiling :
 mov  birdY, 0
-
 InputDone :
     ret
     CheckInput ENDP
@@ -92,13 +96,5 @@ call WriteChar
 ret
 DrawBird ENDP
 
-EraseBird PROC USES eax edx
-mov  dl, birdX
-mov  dh, birdY
-call Gotoxy
-mov  al, ' '
-call WriteChar
-ret
-EraseBird ENDP
 
-END main
+END 
